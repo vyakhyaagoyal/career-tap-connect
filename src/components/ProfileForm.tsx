@@ -1,23 +1,26 @@
-
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import VerificationBadge from "./VerificationBadge";
+import ResumeUpload from "./ResumeUpload";
 
-const roles = ["Frontend Developer", "Backend Developer", "Designer", "Data Analyst"];
-const skillsList = ["React", "Node.js", "Python", "Tailwind", "Figma", "MongoDB", "Express", "TypeScript"];
-const sectors = ["Tech", "Finance", "Healthcare", "Education", "Design"];
+const roles = ["Frontend Developer", "Backend Developer", "Full Stack Developer", "Mobile Developer", "UI/UX Designer", "Product Manager", "Data Analyst", "Data Scientist", "DevOps Engineer"];
+const skillsList = ["React", "Node.js", "Python", "Tailwind", "Figma", "MongoDB", "Express", "TypeScript", "JavaScript", "Go", "Ruby", "AWS", "Docker", "Kubernetes", "SQL"];
+const sectors = ["Tech", "Finance", "Healthcare", "Education", "E-commerce", "Gaming", "Entertainment"];
 const locations = ["Remote", "On-site", "Hybrid"];
-const jobTypes = ["Full-time", "Part-time"];
+const jobTypes = ["Full-time", "Part-time", "Contract", "Freelance"];
+const seekingTypes = ["Internship", "Job"];
 
 const ProfileForm = () => {
   const [name, setName] = useState("Jane Doe");
+  const [seeking, setSeeking] = useState("");
   const [role, setRole] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [sector, setSector] = useState("");
   const [locationPref, setLocationPref] = useState("");
   const [jobType, setJobType] = useState("");
+  const [resumeFile, setResumeFile] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
-  const complete = [name, role, skills.length, sector, locationPref, jobType].every(Boolean);
+  const complete = [name, seeking, role, skills.length, sector, locationPref, jobType, resumeFile].every(Boolean);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +62,12 @@ const ProfileForm = () => {
       <div className="grid md:grid-cols-2 gap-4">
         <Input label="Display Name" value={name} onChange={setName} />
         <Select
+          label="Seeking"
+          value={seeking}
+          onChange={setSeeking}
+          options={seekingTypes}
+        />
+        <Select
           label="Role"
           value={role}
           onChange={setRole}
@@ -89,6 +98,10 @@ const ProfileForm = () => {
           options={jobTypes}
         />
       </div>
+      <div>
+        <h3 className="font-semibold text-sm mb-2">Resume (Required)</h3>
+        <ResumeUpload fileName={resumeFile} onUploadSuccess={setResumeFile} />
+      </div>
       <button
         type="submit"
         className={`mt-3 px-6 py-2 bg-primary text-white w-max rounded-lg shadow hover-scale font-semibold ${complete ? "opacity-100" : "opacity-60 pointer-events-none"}`}
@@ -97,7 +110,7 @@ const ProfileForm = () => {
       </button>
       {!complete && (
         <div className="mt-3 text-sm text-red-500">
-          Complete all fields to appear in recruiter feeds!
+          Complete all fields and upload your resume to appear in recruiter feeds!
         </div>
       )}
     </form>

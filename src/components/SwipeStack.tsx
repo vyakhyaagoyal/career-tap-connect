@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import CardJob from "./CardJob";
 import CardCandidate from "./CardCandidate";
-import { ArrowRight, ArrowLeft, ArrowUp } from "lucide-react";
+import { Heart, X, ArrowUp } from "lucide-react";
 
 // This simplified swipe mechanic is animated with transforms, no external lib yet.
 // Demo only! Wire up with react-tinder-card or gesture lib for production.
@@ -58,8 +57,8 @@ const SwipeStack = ({ feed, userType }: Props) => {
       <div
         className={`
           absolute w-full transition-all duration-300 ease-in-out
-          ${swipeDir === "left" ? "-translate-x-[120vw] opacity-0" : ""}
-          ${swipeDir === "right" ? "translate-x-[120vw] opacity-0" : ""}
+          ${swipeDir === "left" ? "-translate-x-[120vw] -rotate-15 opacity-0" : ""}
+          ${swipeDir === "right" ? "translate-x-[120vw] rotate-15 opacity-0" : ""}
           ${swipeDir === "up" ? "-translate-y-[100vh] opacity-0" : ""}
         `}
         style={{ zIndex: 2 }}
@@ -81,28 +80,37 @@ const SwipeStack = ({ feed, userType }: Props) => {
         </div>
       )}
       {/* Controls: mobile visible, desktop for demo */}
-      <div className="mt-5 flex gap-8 justify-center w-full z-10">
-        <button
-          aria-label="Skip"
-          onClick={() => onSwipe("left")}
-          className="bg-muted p-4 rounded-full shadow hover:bg-muted/70 transition hover:scale-110 text-2xl"
-        >
-          <ArrowLeft className="w-7 h-7" />
-        </button>
-        <button
-          aria-label="Waitlist/Up"
-          onClick={() => onSwipe("up")}
-          className="bg-secondary p-4 rounded-full shadow hover:bg-secondary/80 transition hover:scale-110 text-2xl"
-        >
-          <ArrowUp className="w-7 h-7" />
-        </button>
-        <button
-          aria-label="Interested"
-          onClick={() => onSwipe("right")}
-          className="bg-primary text-primary-foreground p-4 rounded-full shadow hover:scale-110 transition hover:bg-primary/90 text-2xl"
-        >
-          <ArrowRight className="w-7 h-7" />
-        </button>
+      <div className="absolute bottom-[-80px] flex gap-6 justify-center w-full z-10">
+        <div className="flex flex-col items-center gap-2">
+          <button
+            aria-label="Pass"
+            onClick={() => onSwipe("left")}
+            className="bg-white border-2 border-red-300 text-red-500 p-4 rounded-full shadow-lg hover:bg-red-50 transition hover:scale-110"
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <span className="font-bold text-red-500">Pass</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <button
+            aria-label="Waitlist"
+            onClick={() => onSwipe("up")}
+            className="bg-white border-2 border-yellow-400 text-yellow-500 p-4 rounded-full shadow-lg hover:bg-yellow-50 transition hover:scale-110"
+          >
+            <ArrowUp className="w-8 h-8" />
+          </button>
+          <span className="font-bold text-yellow-500">Waitlist</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <button
+            aria-label="Like"
+            onClick={() => onSwipe("right")}
+            className="bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
+          >
+            <Heart className="w-8 h-8" />
+          </button>
+          <span className="font-bold text-purple-600">Like</span>
+        </div>
       </div>
     </div>
   );

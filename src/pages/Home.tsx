@@ -13,17 +13,12 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff]">
       <NavBar />
-      <div className="flex-1 flex justify-center items-center px-3 py-6">
+      <div className="flex-1 flex justify-center items-center px-3 py-6 pb-28">
         <div className="w-full max-w-xl flex flex-col gap-4 items-center">
           <SwipeStack
             feed={feed}
             userType={userType}
           />
-          <div className="w-full flex justify-between mt-2">
-            <div className="text-sm text-muted-foreground">Swipe left: Skip</div>
-            <div className="text-sm text-muted-foreground">Swipe right: Interested</div>
-            <div className="text-sm text-muted-foreground">Swipe up: Waitlist</div>
-          </div>
         </div>
       </div>
     </div>

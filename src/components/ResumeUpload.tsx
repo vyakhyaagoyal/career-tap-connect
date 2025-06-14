@@ -2,9 +2,13 @@
 import { useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 
-const ResumeUpload = () => {
+type Props = {
+  fileName: string | null;
+  onUploadSuccess: (name: string) => void;
+};
+
+const ResumeUpload = ({ fileName, onUploadSuccess }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const handleFile = async (file: File) => {
@@ -20,7 +24,7 @@ const ResumeUpload = () => {
     // Simulate upload
     setTimeout(() => {
       setUploading(false);
-      setFileName(file.name);
+      onUploadSuccess(file.name);
       toast({
         title: "Resume uploaded!",
         description: "Your resume is saved and ready for analysis.",
@@ -46,7 +50,7 @@ const ResumeUpload = () => {
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
       >
-        {uploading ? "Uploading..." : "Upload Resume"}
+        {uploading ? "Uploading..." : fileName ? "Change Resume" : "Upload Resume"}
       </button>
       {fileName && (
         <span className="text-sm text-success bg-green-100 px-3 py-1 rounded transition">{fileName}</span>

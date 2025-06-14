@@ -7,6 +7,7 @@ const navItems = [
   { label: "Inbox", path: "/inbox" },
   { label: "Chats", path: "/chats" },
   { label: "Profile", path: "/profile" },
+  { label: "About", path: "/about" },
 ];
 
 const NavBar = () => {

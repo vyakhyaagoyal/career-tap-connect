@@ -2,10 +2,12 @@
 import NavBar from "@/components/NavBar";
 import ProfileForm from "@/components/ProfileForm";
 import ResumeUpload from "@/components/ResumeUpload";
+import { useState } from "react";
 
 const Profile = () => {
   // ProfileForm will handle mock profile completion
   // ResumeUpload will validate and show upload state
+  const [resumeFileName, setResumeFileName] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff]">
@@ -15,7 +17,10 @@ const Profile = () => {
         <ProfileForm />
         <div>
           <h2 className="text-2xl font-bold mb-2">Resume Upload</h2>
-          <ResumeUpload />
+          <ResumeUpload
+            fileName={resumeFileName}
+            onUploadSuccess={setResumeFileName}
+          />
         </div>
       </div>
     </div>

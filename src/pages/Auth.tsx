@@ -22,6 +22,33 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (profileError) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (!profile) {
+      toast({
+        title: "Login failed",
+        description: "User with this email does not exist.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -56,11 +83,19 @@ const AuthPage = () => {
       },
     });
     if (error) {
-      toast({
-        title: "Error signing up",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error.message.includes("User already registered")) {
+        toast({
+          title: "Sign up failed",
+          description: "A user with this email already exists.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error signing up",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: "Check your email!",

@@ -1,229 +1,127 @@
 import NavBar from "@/components/NavBar";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Phone, Video, Calendar, MoreHorizontal, Paperclip, Smile, Send } from "lucide-react";
-
-// Mock data to replicate the UI from the image
-const mockConversations = [
-  {
-    id: "1",
-    name: "TechCorp",
-    title: "Frontend Developer Intern",
-    lastMessage: "Hi! We'd love to schedule ...",
-    timestamp: "2:30 PM",
-    unreadCount: 2,
-    avatar: "/placeholder.svg",
-    online: true,
-  },
-  {
-    id: "2",
-    name: "StartupXYZ",
-    title: "Full Stack Developer",
-    lastMessage: "Thanks for your interest! When ...",
-    timestamp: "Yesterday",
-    unreadCount: 0,
-    avatar: "/placeholder.svg",
-    online: false,
-  },
-  {
-    id: "3",
-    name: "Creative Agency",
-    title: "UI/UX Designer",
-    lastMessage: "Interview confirmed for tomorro...",
-    timestamp: "2 days ago",
-    unreadCount: 0,
-    avatar: "/placeholder.svg",
-    online: false,
-  },
-];
-
-const mockMessages = {
-  "1": [
-    { id: "m1", from: "them", text: "Hi! We reviewed your profile and we're really impressed with your skills.", time: "2:25 PM" },
-    { id: "m2", from: "them", text: "We'd love to schedule an interview with you for the Frontend Developer Intern position.", time: "2:26 PM" },
-    { id: "m3", from: "me", text: "Thank you so much! I'm very excited about this opportunity.", time: "2:28 PM" },
-    { id: "m4", from: "me", text: "I'm available for an interview anytime this week. What works best for you?", time: "2:29 PM" },
-    { id: "m5", from: "them", text: "Perfect! How about tomorrow at 3 PM? We can do it over Google Meet.", time: "2:30 PM" },
-  ],
-  "2": [
-    { id: "m6", from: 'them', text: 'Thanks for your interest! When would be a good time to chat?', time: 'Yesterday'}
-  ],
-  "3": [
-    { id: "m7", from: 'them', text: 'Interview confirmed for tomorrow at 10 AM. See you then!', time: '2 days ago'}
-  ]
-};
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Send, Phone, Video, CalendarDays, MoreHorizontal, Paperclip } from "lucide-react";
+import { ConversationListItem } from "@/components/ConversationListItem";
+import { ChatMessage } from "@/components/ChatMessage.tsx";
+import { mockConversations, mockMessages } from "@/utils/mockData";
+import { Badge } from "@/components/ui/badge";
 
 const Chats = () => {
-  const [selectedConversationId, setSelectedConversationId] = useState(mockConversations[0].id);
+  const { id: activeConvId } = useParams();
+  const navigate = useNavigate();
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const selectedConversation = mockConversations.find(c => c.id === selectedConversationId);
-  const messages = selectedConversation ? mockMessages[selectedConversationId] || [] : [];
+  const activeConversation = mockConversations.find(c => c.id === activeConvId);
 
-  return (
-    <div className="h-screen w-screen flex flex-col bg-background">
-      <NavBar />
-      <main className="flex-1 flex overflow-hidden">
-        <ConversationList
-          conversations={mockConversations}
-          selectedConversationId={selectedConversationId}
-          onSelectConversation={setSelectedConversationId}
-        />
-        <ChatWindow
-          conversation={selectedConversation}
-          messages={messages}
-        />
-      </main>
-    </div>
-  );
-};
+  useEffect(() => {
+    if (activeConvId) {
+      setMessages(mockMessages[activeConvId] || []);
+    }
+  }, [activeConvId]);
 
-function ConversationList({ conversations, selectedConversationId, onSelectConversation }) {
-  return (
-    <div className="hidden md:flex w-full md:w-1/3 lg:w-1/4 border-r flex-col bg-white">
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold">Messages</h2>
-        <p className="text-sm text-muted-foreground">Your matched conversations</p>
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        {conversations.map((conv) => (
-          <ConversationListItem
-            key={conv.id}
-            conversation={conv}
-            isSelected={conv.id === selectedConversationId}
-            onClick={() => onSelectConversation(conv.id)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newMessage.trim() === "" || !activeConvId) return;
 
-function ConversationListItem({ conversation, isSelected, onClick }) {
-  const { name, title, lastMessage, timestamp, unreadCount, avatar, online } = conversation;
-  return (
-    <div
-      onClick={onClick}
-      className={cn(
-        "p-4 flex gap-4 items-center cursor-pointer border-l-4",
-        isSelected ? "bg-primary/5 border-primary" : "border-transparent hover:bg-gray-50"
-      )}
-    >
-      <div className="relative">
-        <Avatar>
-          <AvatarImage src={avatar} alt={name} />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        {online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>}
-      </div>
-      <div className="flex-1 overflow-hidden">
-        <div className="flex justify-between items-baseline">
-          <p className="font-bold truncate">{name}</p>
-          <p className="text-xs text-muted-foreground">{timestamp}</p>
-        </div>
-        <p className="text-sm text-muted-foreground truncate">{title}</p>
-        <div className="flex justify-between items-center mt-1">
-          <p className="text-sm text-muted-foreground truncate w-10/12">{lastMessage}</p>
-          {unreadCount > 0 && (
-            <div className="w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-              {unreadCount}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ChatWindow({ conversation, messages }) {
-  if (!conversation) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-muted-foreground bg-slate-50">
-        <p>Select a conversation to start chatting.</p>
-      </div>
-    );
+    const newMsg = {
+        id: messages.length + 1,
+        from: "self" as const,
+        text: newMessage,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages(prev => [...prev, newMsg]);
+    setNewMessage("");
   }
 
   return (
-    <div className="w-full md:w-2/3 lg:w-3/4 flex flex-col">
-      <ChatHeader conversation={conversation} />
-      <div className="flex-1 p-6 overflow-y-auto bg-slate-50 space-y-4">
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
-      </div>
-      <ChatInput />
-    </div>
-  );
-}
-
-function ChatHeader({ conversation }) {
-  const { name, title, online } = conversation;
-  return (
-    <div className="p-4 border-b bg-white flex justify-between items-center">
-      <div className="flex items-center gap-3">
-        <Avatar>
-          <AvatarImage src={conversation.avatar} alt={name} />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="font-bold">{name}</p>
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-muted-foreground">{title}</p>
-            {online && <div className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Online</div>}
+    <div className="h-screen max-h-screen flex flex-col bg-gray-50">
+      <NavBar />
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-1/3 max-w-sm border-r bg-white flex flex-col">
+          <header className="p-4 border-b">
+            <h2 className="text-xl font-bold">Messages</h2>
+            <p className="text-sm text-gray-500">Your matched conversations</p>
+          </header>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {mockConversations.map((conv) => (
+              <ConversationListItem
+                key={conv.id}
+                name={conv.company}
+                role={conv.role}
+                lastMessage={conv.lastMessage}
+                time={conv.time}
+                online={conv.online}
+                unreadCount={conv.unread}
+                avatar={conv.avatar}
+                isActive={activeConvId === conv.id}
+                onClick={() => navigate(`/chats/${conv.id}`)}
+              />
+            ))}
           </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-1 md:gap-2">
-        <Button variant="ghost" size="icon"><Phone className="w-5 h-5" /></Button>
-        <Button variant="ghost" size="icon"><Video className="w-5 h-5" /></Button>
-        <Button className="bg-primary hover:bg-primary/90 hidden sm:flex">
-          <Calendar className="w-4 h-4 mr-2" />
-          Schedule
-        </Button>
-        <Button variant="ghost" size="icon"><MoreHorizontal className="w-5 h-5" /></Button>
-      </div>
-    </div>
-  );
-}
+        </aside>
 
-function ChatMessage({ message }) {
-  const { from, text, time } = message;
-  const isMe = from === 'me';
-  const otherUserInitial = "T"; // Placeholder for the other user's initial
-  return (
-    <div className={cn("flex items-end gap-2", isMe ? "justify-end" : "justify-start")}>
-      {!isMe && <Avatar className="w-8 h-8"><AvatarFallback>{otherUserInitial}</AvatarFallback></Avatar>}
-      <div className={cn(
-          "max-w-md p-3 rounded-xl shadow-sm",
-          isMe
-            ? "bg-gradient-to-br from-purple-600 to-pink-500 text-white rounded-br-none"
-            : "bg-white text-foreground rounded-bl-none"
-        )}>
-        <p className="text-sm">{text}</p>
-        <p className={cn("text-xs mt-1 text-right", isMe ? "text-purple-200/80" : "text-muted-foreground")}>{time}</p>
+        {/* Main Chat Area */}
+        <main className="flex-1 flex flex-col">
+          {activeConversation ? (
+            <>
+              <header className="flex items-center justify-between p-3 border-b bg-white shadow-sm">
+                <div className="flex items-center gap-4">
+                  <Avatar>
+                    <AvatarFallback>{activeConversation.avatar}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="font-bold">{activeConversation.company}</h3>
+                    <p className="text-sm text-gray-500">{activeConversation.role}</p>
+                  </div>
+                  {activeConversation.online && <Badge variant="outline" className="text-green-600 border-green-300">Online</Badge>}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="icon"><Phone /></Button>
+                  <Button variant="ghost" size="icon"><Video /></Button>
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"><CalendarDays className="mr-2" />Schedule</Button>
+                  <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
+                </div>
+              </header>
+              <div className="flex-1 overflow-y-auto p-6">
+                {messages.map((msg) => (
+                  <ChatMessage key={msg.id} {...msg} />
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+              <form onSubmit={handleSendMessage} className="p-4 border-t bg-white flex items-center gap-2">
+                <Button variant="ghost" size="icon" type="button"><Paperclip /></Button>
+                <Input
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  autoComplete="off"
+                />
+                <Button type="submit" size="icon" className="bg-gradient-to-br from-purple-600 to-pink-500 text-white rounded-full h-11 w-11">
+                  <Send />
+                </Button>
+              </form>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-gray-500">
+              <p>Select a conversation to start chatting</p>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
-}
-
-function ChatInput() {
-  return (
-    <div className="p-4 border-t bg-white">
-      <div className="relative">
-        <Input placeholder="Type your message..." className="pr-28" />
-        <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          <Button variant="ghost" size="icon"><Paperclip className="w-5 h-5 text-muted-foreground" /></Button>
-          <Button variant="ghost" size="icon"><Smile className="w-5 h-5 text-muted-foreground" /></Button>
-          <Button size="icon" className="bg-primary hover:bg-primary/90">
-            <Send className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
+};
 
 export default Chats;

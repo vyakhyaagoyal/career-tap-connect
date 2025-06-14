@@ -2,23 +2,12 @@ import NavBar from "@/components/NavBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Heart, Activity as ActivityIcon } from "lucide-react";
-import { ActivityItem } from './ActivityItem.tsx';
-
-// Mock data for activity tab
-const mockInboxActivity = [
-  {
-    id: 1,
-    title: "Application Submitted",
-    description: "You applied to Frontend Developer at Acme Corp.",
-    date: "2024-06-01",
-  },
-  {
-    id: 2,
-    title: "Interview Scheduled",
-    description: "Interview with Beta Inc. scheduled for June 10.",
-    date: "2024-06-03",
-  },
-];
+import {
+  mockNotifications,
+  mockInboxActivity,
+} from "@/utils/mockData";
+import { NotificationItem } from "@/components/NotificationItem";
+import { ActivityItem } from "@/components/ActivityItem";
 
 const Inbox = () => {
   return (
@@ -51,8 +40,9 @@ const Inbox = () => {
 
         <TabsContent value="notifications" className="mt-6">
           <div className="space-y-3">
-            <p className="text-center text-gray-500">No new notifications.</p>
-            <p className="text-center text-gray-500">Check back later!</p>
+            {mockNotifications.map((item) => (
+              <NotificationItem key={item.id} {...item} />
+            ))}
           </div>
         </TabsContent>
         <TabsContent value="matches" className="mt-6">

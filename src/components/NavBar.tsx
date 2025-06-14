@@ -1,6 +1,5 @@
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const navItems = [
   { label: "Home", path: "/home" },
@@ -34,10 +33,8 @@ const NavBar = () => {
             />
           ))}
         </div>
-        {/* Temporary: Login/SignUp Buttons - wire up actual auth later */}
         <div className="hidden md:flex items-center gap-2">
-          <button className="text-primary font-bold px-4 py-1.5 rounded hover:bg-primary/10 transition">Login</button>
-          <button className="bg-primary text-primary-foreground px-4 py-1.5 rounded font-bold hover-scale transition hover:bg-primary/90">Sign Up</button>
+          {/* Auth buttons removed */}
         </div>
       </div>
     </nav>

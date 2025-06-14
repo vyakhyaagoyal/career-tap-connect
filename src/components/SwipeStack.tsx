@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import CardJob from "./CardJob";
 import CardCandidate from "./CardCandidate";
@@ -36,7 +35,13 @@ const SwipeStack = ({ feed, userType }: Props) => {
   const [swipeDir, setSwipeDir] = useState<null | "left" | "right" | "up">(null);
 
   const onSwipe = (dir: "left" | "right" | "up") => {
+    const cardData = feed[current];
+    if (!cardData) return;
+
     setSwipeDir(dir);
+
+    // Swipe data is no longer saved as auth is removed.
+    
     setTimeout(() => {
       setSwipeDir(null);
       setCurrent((c) => Math.min(feed.length, c + 1));

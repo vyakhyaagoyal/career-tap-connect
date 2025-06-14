@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -45,22 +44,7 @@ const NavBar = () => {
             >
               Logout
             </button>
-          ) : (
-            <>
-              <button
-                onClick={() => navigate("/auth")}
-                className="text-primary font-bold px-4 py-1.5 rounded hover:bg-primary/10 transition"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/auth")}
-                className="bg-primary text-primary-foreground px-4 py-1.5 rounded font-bold hover-scale transition hover:bg-primary/90"
-              >
-                Sign Up
-              </button>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
     </nav>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -71,6 +70,25 @@ const AuthPage = () => {
     setLoading(false);
   };
 
+  const handleSignInWithGoogle = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/home`,
+      },
+    });
+    if (error) {
+      toast({
+        title: 'Error with Google sign in',
+        description: error.message,
+        variant: 'destructive',
+      });
+      setLoading(false);
+    }
+    // No need to setLoading(false) on success because the page will redirect.
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff] p-4">
       <Tabs defaultValue="login" className="w-full max-w-md">
@@ -113,6 +131,19 @@ const AuthPage = () => {
                   {loading ? "Logging in..." : "Login"}
                 </Button>
               </form>
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
+                {loading ? "Redirecting..." : "Login with Google"}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -182,6 +213,19 @@ const AuthPage = () => {
                   {loading ? "Creating account..." : "Sign Up"}
                 </Button>
               </form>
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
+                {loading ? "Redirecting..." : "Sign up with Google"}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

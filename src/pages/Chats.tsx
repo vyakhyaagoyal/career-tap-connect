@@ -26,7 +26,7 @@ const Chats = () => {
       const { data: messagesData, error: messagesError } = await supabase
         .from("messages")
         .select("*")
-        .eq("conversation_id", conversationId)
+        .eq("conversation_id", parseInt(conversationId, 10))
         .order("created_at", { ascending: true });
 
       if (messagesError) throw new Error(messagesError.message);

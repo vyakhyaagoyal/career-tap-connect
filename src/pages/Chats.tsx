@@ -3,12 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Phone, Video, CalendarDays, MoreHorizontal, Paperclip } from "lucide-react";
-import { ConversationListItem } from "@/components/ConversationListItem";
-import { ChatMessage } from "@/components/ChatMessage.tsx";
-import { mockConversations, mockMessages } from "@/utils/mockData";
+import { CalendarDays, MoreHorizontal, Paperclip, Phone, Send, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { mockConversations, mockMessages } from "@/utils/mockData";
+import { ConversationListItem } from "@/components/ConversationListItem";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { ChatMessage } from "@/components/ChatMessage";
 
 const Chats = () => {
   const { id: activeConvId } = useParams();

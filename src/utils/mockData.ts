@@ -200,3 +200,52 @@ export const mockMessages: { [key: string]: { id: number; from: "self" | "other"
     { id: 1, from: "other", text: "Interview confirmed for tomorrow at 2 PM", time: "2 days ago" },
   ]
 };
+
+export const mockConversations = [
+  {
+    id: "match1",
+    company: "TechCorp",
+    role: "Frontend Developer Intern",
+    lastMessage: "Perfect! How about tomorrow at 3 PM? We can do it over Google Meet.",
+    time: "2:30 PM",
+    unread: 2,
+    avatar: "T",
+    online: true,
+  },
+  {
+    id: "match2",
+    company: "StartupXYZ",
+    role: "Full Stack Developer",
+    lastMessage: "Thanks for your interest! When are you available for a call?",
+    time: "Yesterday",
+    unread: 0,
+    avatar: "S",
+    online: false,
+  },
+  {
+    id: "match3",
+    company: "Creative Agency",
+    role: "UI/UX Designer",
+    lastMessage: "Interview confirmed for tomorrow at 2 PM",
+    time: "2 days ago",
+    unread: 0,
+    avatar: "C",
+    online: true,
+  },
+];
+
+export const mockMessages: { [key: string]: { id: number; from: "self" | "other"; text: string; time: string }[] } = {
+  match1: [
+    { id: 1, from: "other", text: "Hi! We reviewed your profile and we're really impressed with your skills.", time: "2:25 PM" },
+    { id: 2, from: "other", text: "We'd love to schedule an interview with you for the Frontend Developer Intern position.", time: "2:26 PM" },
+    { id: 3, from: "self", text: "Thank you so much! I'm very excited about this opportunity.", time: "2:28 PM" },
+    { id: 4, from: "self", text: "I'm available for an interview anytime this week. What works best for you?", time: "2:29 PM" },
+    { id: 5, from: "other", text: "Perfect! How about tomorrow at 3 PM? We can do it over Google Meet.", time: "2:30 PM" },
+  ],
+  match2: [
+    { id: 1, from: "other", text: "Thanks for your interest! When are you available for a call?", time: "Yesterday" },
+  ],
+  match3: [
+    { id: 1, from: "other", text: "Interview confirmed for tomorrow at 2 PM", time: "2 days ago" },
+  ]
+};

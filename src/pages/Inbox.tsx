@@ -3,43 +3,14 @@ import NavBar from "@/components/NavBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Heart, Activity as ActivityIcon } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import {
   mockNotifications,
   mockInboxActivity,
 } from "@/utils/mockData";
 import { NotificationItem } from "@/components/NotificationItem";
-import { MatchItem } from "@/components/MatchItem";
 import { ActivityItem } from "@/components/ActivityItem";
 
 const Inbox = () => {
-  const { user } = useAuth();
-
-  const { data: matches, isLoading: isLoadingMatches } = useQuery({
-    queryKey: ["matches", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("matches")
-        .select(`
-          id,
-          created_at,
-          jobs ( id, title, company ),
-          conversations ( id )
-        `)
-        .or(`jobseeker_id.eq.${user.id},recruiter_id.eq.${user.id}`);
-      
-      if (error) {
-        console.error("Error fetching matches:", error);
-        throw new Error(error.message);
-      }
-      return data;
-    },
-    enabled: !!user,
-  });
-
   return (
   <div className="min-h-screen flex flex-col bg-gray-50">
     <NavBar />
@@ -77,24 +48,7 @@ const Inbox = () => {
         </TabsContent>
         <TabsContent value="matches" className="mt-6">
           <div className="space-y-3">
-            {isLoadingMatches && <p>Loading matches...</p>}
-            {matches && matches.length > 0 ? (
-              matches.map((match) => (
-                <MatchItem
-                  key={match.id}
-                  id={match.id}
-                  company={match.jobs?.company || "Company"}
-                  role={match.jobs?.title || "Role"}
-                  message="You have a new match! Start the conversation."
-                  time={new Date(match.created_at).toLocaleDateString()}
-                  status="New Match"
-                  avatar={match.jobs?.company?.charAt(0) || "C"}
-                  conversationId={match.conversations[0]?.id}
-                />
-              ))
-            ) : (
-              !isLoadingMatches && <p className="text-center text-gray-500">No matches yet.</p>
-            )}
+            <p className="text-center text-gray-500">No matches yet.</p>
           </div>
         </TabsContent>
         <TabsContent value="activity" className="mt-6">

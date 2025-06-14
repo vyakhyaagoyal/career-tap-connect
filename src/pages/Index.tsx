@@ -2,30 +2,20 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
-import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { session } = useAuth();
 
   useEffect(() => {
     document.title = "SwipeHire — Gamified Job Discovery";
   }, []);
   
   const handleGetStarted = () => {
-    if (session) {
-      navigate("/home");
-    } else {
-      navigate("/auth");
-    }
+    navigate("/home");
   };
 
   const handleMyProfile = () => {
-    if (session) {
-      navigate("/profile");
-    } else {
-      navigate("/auth");
-    }
+    navigate("/profile");
   };
 
   return (

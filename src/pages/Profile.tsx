@@ -15,13 +15,13 @@ const Profile = () => {
       <div className="flex-1 px-3 max-w-2xl mx-auto flex flex-col gap-8 py-8">
         <h1 className="text-3xl font-extrabold mb-2">My Profile</h1>
         <ProfileForm />
-        <div>
+        {/* <div>
           <h2 className="text-2xl font-bold mb-2">Resume Upload</h2>
           <ResumeUpload
             fileName={resumeFileName}
             onUploadSuccess={setResumeFileName}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

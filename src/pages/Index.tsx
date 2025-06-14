@@ -2,13 +2,31 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { session } = useAuth();
 
   useEffect(() => {
     document.title = "SwipeHire — Gamified Job Discovery";
   }, []);
+  
+  const handleGetStarted = () => {
+    if (session) {
+      navigate("/home");
+    } else {
+      navigate("/auth");
+    }
+  };
+
+  const handleMyProfile = () => {
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/auth");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff] flex flex-col">
@@ -23,13 +41,13 @@ const Index = () => {
         </p>
         <div className="flex flex-col md:flex-row gap-4 animate-scale-in">
           <button
-            onClick={() => navigate("/home")}
+            onClick={handleGetStarted}
             className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold shadow-lg hover-scale text-lg transition-all hover:bg-primary/90"
           >
             Get Started
           </button>
           <button
-            onClick={() => navigate("/profile")}
+            onClick={handleMyProfile}
             className="bg-white border border-primary px-8 py-4 rounded-xl font-bold text-primary shadow-sm hover-scale text-lg transition-all hover:bg-primary hover:text-white"
           >
             My Profile

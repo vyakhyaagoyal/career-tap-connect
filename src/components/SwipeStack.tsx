@@ -3,6 +3,9 @@ import { useState } from "react";
 import CardJob from "./CardJob";
 import CardCandidate from "./CardCandidate";
 import { Heart, X, ArrowUp } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/components/ui/use-toast";
 
 // This simplified swipe mechanic is animated with transforms, no external lib yet.
 // Demo only! Wire up with react-tinder-card or gesture lib for production.
@@ -34,9 +37,49 @@ type Props = {
 const SwipeStack = ({ feed, userType }: Props) => {
   const [current, setCurrent] = useState(0);
   const [swipeDir, setSwipeDir] = useState<null | "left" | "right" | "up">(null);
+  const { user } = useAuth();
 
-  const onSwipe = (dir: "left" | "right" | "up") => {
+  const onSwipe = async (dir: "left" | "right" | "up") => {
+    if (!user) {
+      toast({
+        title: "Authentication Error",
+        description: "You must be logged in to swipe.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const cardData = feed[current];
+    if (!cardData) return;
+
     setSwipeDir(dir);
+
+    const swipeData: {
+      swiper_id: string;
+      direction: "left" | "right" | "up";
+      job_id?: string;
+      swiped_candidate_id?: string;
+    } = {
+      swiper_id: user.id,
+      direction: dir,
+    };
+
+    if (userType === "jobseeker") {
+      swipeData.job_id = cardData.id;
+    } else {
+      swipeData.swiped_candidate_id = cardData.id;
+    }
+
+    const { error } = await supabase.from("swipes").insert(swipeData);
+    if (error) {
+      console.error("Error saving swipe:", error);
+      toast({
+        title: "Swipe Error",
+        description: "Could not save your swipe. Please try again.",
+        variant: "destructive",
+      });
+    }
+
     setTimeout(() => {
       setSwipeDir(null);
       setCurrent((c) => Math.min(feed.length, c + 1));

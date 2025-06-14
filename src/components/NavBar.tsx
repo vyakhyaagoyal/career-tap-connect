@@ -1,5 +1,6 @@
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const navItems = [
@@ -13,6 +14,7 @@ const navItems = [
 const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { session, logout } = useAuth();
 
   return (
     <nav className="w-full sticky top-0 bg-white/80 backdrop-blur z-40 border-b border-border shadow-sm">
@@ -35,10 +37,30 @@ const NavBar = () => {
             />
           ))}
         </div>
-        {/* Temporary: Login/SignUp Buttons - wire up actual auth later */}
         <div className="hidden md:flex items-center gap-2">
-          <button className="text-primary font-bold px-4 py-1.5 rounded hover:bg-primary/10 transition">Login</button>
-          <button className="bg-primary text-primary-foreground px-4 py-1.5 rounded font-bold hover-scale transition hover:bg-primary/90">Sign Up</button>
+          {session ? (
+            <button
+              onClick={logout}
+              className="bg-primary text-primary-foreground px-4 py-1.5 rounded font-bold hover-scale transition hover:bg-primary/90"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/auth")}
+                className="text-primary font-bold px-4 py-1.5 rounded hover:bg-primary/10 transition"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/auth")}
+                className="bg-primary text-primary-foreground px-4 py-1.5 rounded font-bold hover-scale transition hover:bg-primary/90"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>

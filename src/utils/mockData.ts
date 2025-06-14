@@ -1,4 +1,3 @@
-
 export const mockFeedJobs = [
   {
     id: "job1",
@@ -59,3 +58,96 @@ export const mockFeedCandidates = [
   },
 ];
 
+export const mockNotifications = [
+  {
+    id: "notif1",
+    text: "You and TechCorp both swiped right on Frontend Developer position",
+    time: "2 hours ago",
+    read: false,
+  },
+  {
+    id: "notif2",
+    text: "StartupXYZ showed interest in your profile!",
+    time: "4 hours ago",
+    read: false,
+  },
+  {
+    id: "notif3",
+    text: "Your interview with Creative Agency is confirmed for tomorrow at 2 PM.",
+    time: "1 day ago",
+    read: true,
+  },
+  {
+    id: "notif4",
+    text: "Datatech decided to move forward with other candidates",
+    time: "2 days ago",
+    read: true,
+  },
+  {
+    id: "notif5",
+    text: "You've been waitlisted for the Backend Developer role at CloudCorp.",
+    time: "3 days ago",
+    read: true,
+  },
+];
+
+export const mockInboxMatches = [
+  {
+    id: "match1",
+    company: "TechCorp",
+    role: "Frontend Developer Intern",
+    message: "Hi! We'd love to schedule an interview with you.",
+    time: "Matched 2 hours ago",
+    status: "New Match",
+    avatar: "T",
+  },
+  {
+    id: "match2",
+    company: "StartupXYZ",
+    role: "Full Stack Developer",
+    message: "Thanks for your interest! When are you available for a call?",
+    time: "Matched 1 day ago",
+    status: "Active",
+    avatar: "S",
+  },
+  {
+    id: "match3",
+    company: "Creative Agency",
+    role: "UI/UX Designer",
+    message: "Interview confirmed for tomorrow at 2 PM",
+    time: "Matched 3 days ago",
+    status: "Interview Scheduled",
+    avatar: "C",
+  },
+];
+
+export const mockInboxActivity = [
+  {
+    id: "act1",
+    type: "right" as const,
+    text: "TechCorp - Frontend Developer",
+    details: "You swiped right • 2 hours ago",
+    status: "Matched!",
+  },
+  {
+    id: "act2",
+    type: "left" as const,
+    text: "DataScience Inc - Data Analyst",
+    details: "You swiped left • 3 hours ago",
+    status: "Passed",
+  },
+  {
+    id: "act3",
+    type: "up" as const,
+    text: "StartupXYZ - Backend Developer",
+    details: "You swiped up • 5 hours ago",
+    status: "Waitlisted",
+  },
+  {
+    id: "act4",
+    type: "right" as const,
+    text: "CloudCorp - DevOps Engineer",
+    details: "You swiped right • 1 day ago",
+    status: "Pending",
+  },
+];

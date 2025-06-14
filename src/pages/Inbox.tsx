@@ -1,49 +1,76 @@
-
 import NavBar from "@/components/NavBar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Bell, Heart, Activity as ActivityIcon } from "lucide-react";
+import { ActivityItem } from './ActivityItem.tsx';
 
-const Inbox = () => (
-  <div className="min-h-screen flex flex-col bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff]">
+// Mock data for activity tab
+const mockInboxActivity = [
+  {
+    id: 1,
+    title: "Application Submitted",
+    description: "You applied to Frontend Developer at Acme Corp.",
+    date: "2024-06-01",
+  },
+  {
+    id: 2,
+    title: "Interview Scheduled",
+    description: "Interview with Beta Inc. scheduled for June 10.",
+    date: "2024-06-03",
+  },
+];
+
+const Inbox = () => {
+  return (
+  <div className="min-h-screen flex flex-col bg-gray-50">
     <NavBar />
-    <div className="flex-1 px-3 pt-10 max-w-3xl mx-auto w-full">
-      <h1 className="text-3xl font-extrabold mb-6">Inbox & Updates</h1>
-      <div className="space-y-3">
-        <InboxCard
-          type="swipe-right"
-          message="John Doe wants to connect with you! Mutual interest has been detected."
-        />
-        <InboxCard
-          type="swipe-left"
-          message="Your profile was skipped by Alice - never give up!"
-        />
-        <InboxCard
-          type="waitlist"
-          message="Samantha added you to waitlist, answer their question to unlock chat."
-        />
-      </div>
-      <div className="pt-8 text-muted-foreground text-center">Check back often for the latest updates!</div>
+    <div className="flex-1 px-4 py-8 max-w-4xl mx-auto w-full animate-fade-in">
+      <header className="mb-8">
+        <h1 className="text-4xl font-extrabold text-gray-800">Inbox</h1>
+        <p className="text-gray-500 mt-1">
+          Stay updated with your job search activity
+        </p>
+      </header>
+
+      <Tabs defaultValue="notifications" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 bg-purple-100/60 p-1 rounded-xl h-auto">
+          <TabsTrigger value="notifications" className="flex items-center justify-center gap-2 py-2.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-gray-700 font-semibold transition-all duration-200">
+            <Bell className="h-5 w-5" />
+            <span>Notifications</span>
+            <Badge className="bg-red-500 text-white ml-1">2</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="matches" className="flex items-center justify-center gap-2 py-2.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-gray-700 font-semibold transition-all duration-200">
+            <Heart className="h-5 w-5" />
+            <span>Matches</span>
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="flex items-center justify-center gap-2 py-2.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-gray-700 font-semibold transition-all duration-200">
+            <ActivityIcon className="h-5 w-5" />
+            <span>Activity</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="notifications" className="mt-6">
+          <div className="space-y-3">
+            <p className="text-center text-gray-500">No new notifications.</p>
+            <p className="text-center text-gray-500">Check back later!</p>
+          </div>
+        </TabsContent>
+        <TabsContent value="matches" className="mt-6">
+          <div className="space-y-3">
+            <p className="text-center text-gray-500">No matches yet.</p>
+          </div>
+        </TabsContent>
+        <TabsContent value="activity" className="mt-6">
+          <div className="space-y-3">
+            {mockInboxActivity.map((item) => (
+              <ActivityItem key={item.id} {...item} />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   </div>
-);
-
-function InboxCard({
-  type,
-  message,
-}: {
-  type: "swipe-right" | "swipe-left" | "waitlist";
-  message: string;
-}) {
-  const bg =
-    type === "swipe-right"
-      ? "bg-green-50 border-green-300"
-      : type === "swipe-left"
-      ? "bg-red-50 border-red-300"
-      : "bg-blue-50 border-blue-300";
-  return (
-    <div className={`rounded-xl border p-5 flex items-center gap-4 shadow ${bg}`}>
-      <span className="font-bold text-lg">{type === "swipe-right" ? "🤝" : type === "swipe-left" ? "👋" : "🌀"}</span>
-      <span className="text-base">{message}</span>
-    </div>
-  );
-}
+  )
+};
 
 export default Inbox;

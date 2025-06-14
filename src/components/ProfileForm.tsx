@@ -20,6 +20,8 @@ const ProfileForm = () => {
   const [jobType, setJobType] = useState("");
   const [resumeFile, setResumeFile] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
+  const [sectorManual, setSectorManual] = useState("");
+  const [roleManual, setRoleManual] = useState("");
   const complete = [name, seeking, role, skills.length, sector, locationPref, jobType, resumeFile].every(Boolean);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,6 +41,44 @@ const ProfileForm = () => {
         description: "Your identity was verified (demo)!",
       });
     }, 900);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "seeking":
+        setSeeking(value);
+        break;
+      case "role":
+        setRole(value);
+        break;
+      case "skills":
+        setSkills(value.split(","));
+        break;
+      case "sector":
+        setSector(value);
+        break;
+      case "locationPref":
+        setLocationPref(value);
+        break;
+      case "jobType":
+        setJobType(value);
+        break;
+      case "resumeFile":
+        setResumeFile(value);
+        break;
+      case "sectorManual":
+        setSectorManual(value);
+        break;
+      case "roleManual":
+        setRoleManual(value);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -67,24 +107,55 @@ const ProfileForm = () => {
           onChange={setSeeking}
           options={seekingTypes}
         />
-        <Select
-          label="Role"
+        <label>Sector:</label>
+        <select
+          name="sector"
+          value={sector}
+          onChange={handleChange}
+        >
+          <option value="">Select sector</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+          <option value="Other">Other (type below)</option>
+        </select>
+        {sector === "Other" && (
+          <input
+            type="text"
+            name="sectorManual"
+            placeholder="Enter sector"
+            value={sectorManual}
+            onChange={handleChange}
+          />
+        )}
+
+        <label>Role:</label>
+        <select
+          name="role"
           value={role}
-          onChange={setRole}
-          options={roles}
-        />
+          onChange={handleChange}
+        >
+          <option value="">Select role</option>
+          <option value="Developer">Developer</option>
+          <option value="Manager">Manager</option>
+          <option value="Other">Other (type below)</option>
+        </select>
+        {role === "Other" && (
+          <input
+            type="text"
+            name="roleManual"
+            placeholder="Enter role"
+            value={roleManual}
+            onChange={handleChange}
+          />
+        )}
+
         <MultiSelect
           label="Skills"
           value={skills}
           onChange={setSkills}
           options={skillsList}
         />
-        <Select
-          label="Sector/Industry"
-          value={sector}
-          onChange={setSector}
-          options={sectors}
-        />
+        
         <Select
           label="Location Preference"
           value={locationPref}

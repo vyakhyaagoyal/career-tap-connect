@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
@@ -7,7 +6,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "SwipeHire — Gamified Job Discovery";
+    document.title = "LinkMatch";
   }, []);
 
   return (
@@ -15,7 +14,7 @@ const Index = () => {
       <NavBar />
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 animate-fade-in text-center drop-shadow">
-          SwipeHire
+          LinkMatch
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 text-center max-w-2xl animate-fade-in">
           The world's first swiping-based, verified hiring platform for Jobs & Internships.<br />

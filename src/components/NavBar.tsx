@@ -21,8 +21,7 @@ const NavBar = () => {
           className="flex items-center gap-2 cursor-pointer select-none"
           onClick={() => navigate("/")}
         >
-          <span className="text-primary font-extrabold text-2xl tracking-tight">SwipeHire</span>
-          <span className="text-xs font-semibold ml-1 px-2 bg-primary/10 text-primary rounded-full">BETA</span>
+          <span className="text-primary font-extrabold text-2xl tracking-tight">LinkMatch</span>
         </div>
         <div className="flex gap-2 md:gap-4">
           {navItems.map((item) => (

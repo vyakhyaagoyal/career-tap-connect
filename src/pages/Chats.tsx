@@ -22,14 +22,41 @@ const Chats = () => {
     queryKey: ["messages", conversationId],
     queryFn: async () => {
       if (!conversationId) return [];
-      const { data, error } = await supabase
+
+      const { data: messagesData, error: messagesError } = await supabase
         .from("messages")
-        .select("*, profiles (id, full_name)")
+        .select("*")
         .eq("conversation_id", conversationId)
         .order("created_at", { ascending: true });
 
-      if (error) throw new Error(error.message);
-      return data;
+      if (messagesError) throw new Error(messagesError.message);
+      if (!messagesData) return [];
+
+      const senderIds = [...new Set(messagesData.map((m) => m.sender_id))];
+
+      if (senderIds.length === 0) {
+        return messagesData.map((m) => ({ ...m, profiles: null }));
+      }
+
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", senderIds);
+
+      if (profilesError) throw new Error(profilesError.message);
+
+      const profilesById = profilesData.reduce(
+        (acc, p) => {
+          acc[p.id] = p;
+          return acc;
+        },
+        {} as Record<string, { id: string; full_name: string | null }>,
+      );
+
+      return messagesData.map((m) => ({
+        ...m,
+        profiles: profilesById[m.sender_id] || null,
+      }));
     },
     enabled: !!conversationId,
   });
@@ -38,13 +65,17 @@ const Chats = () => {
     mutationFn: async (content: string) => {
       if (!conversationId || !user) return;
       const { error } = await supabase.from("messages").insert({
-        conversation_id: parseInt(conversationId),
+        conversation_id: parseInt(conversationId, 10),
         sender_id: user.id,
         content: content,
       });
 
       if (error) {
-        toast({ title: "Error sending message", description: error.message, variant: "destructive" });
+        toast({
+          title: "Error sending message",
+          description: error.message,
+          variant: "destructive",
+        });
         throw new Error(error.message);
       }
     },
@@ -53,7 +84,7 @@ const Chats = () => {
       setNewMessage("");
     },
   });
-  
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMessage.trim()) {
@@ -75,8 +106,10 @@ const Chats = () => {
           filter: `conversation_id=eq.${conversationId}`,
         },
         () => {
-          queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
-        }
+          queryClient.invalidateQueries({
+            queryKey: ["messages", conversationId],
+          });
+        },
       )
       .subscribe();
 
@@ -84,7 +117,7 @@ const Chats = () => {
       supabase.removeChannel(channel);
     };
   }, [conversationId, queryClient]);
-  
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

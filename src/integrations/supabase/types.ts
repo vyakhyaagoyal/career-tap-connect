@@ -145,23 +145,29 @@ export type Database = {
       }
       profiles: {
         Row: {
+          education: string | null
           email: string | null
           full_name: string | null
           id: string
+          location: string | null
           skills: string[] | null
           user_role: Database["public"]["Enums"]["user_role"]
         }
         Insert: {
+          education?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          location?: string | null
           skills?: string[] | null
           user_role: Database["public"]["Enums"]["user_role"]
         }
         Update: {
+          education?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          location?: string | null
           skills?: string[] | null
           user_role?: Database["public"]["Enums"]["user_role"]
         }

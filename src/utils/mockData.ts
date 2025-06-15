@@ -50,7 +50,7 @@ export const mockFeedJobs = [
     pay: "₹1,80,000/mo",
     company: "CloudCore",
     location: "On-site",
-    tags: ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Jenkins", "Ansible"],
+    tags: ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Jenkins", "Ansible", "Python"],
     verified: false,
   },
   {
@@ -62,26 +62,56 @@ export const mockFeedJobs = [
     tags: ["React Native", "TypeScript", "Redux", "Firebase", "App Store", "Play Store", "Jest"],
     verified: true,
   },
+  {
+    id: "job8",
+    title: "Cybersecurity Analyst",
+    pay: "₹1,70,000/mo",
+    company: "SecureNet",
+    location: "Hybrid",
+    tags: ["Cybersecurity", "NIST", "Penetration Testing", "SIEM", "Python"],
+    verified: true,
+  },
+  {
+    id: "job9",
+    title: "Full-Stack Developer",
+    pay: "₹1,90,000/mo",
+    company: "Innovatech Solutions",
+    location: "Remote",
+    tags: ["React", "Node.js", "TypeScript", "PostgreSQL", "Docker", "AWS"],
+    verified: true,
+  },
 ];
 
 export const mockFeedCandidates = [
   {
     id: "cand1",
     name: "Priya Sharma",
-    skills: ["React", "Tailwind", "Node.js"],
+    skills: ["React", "TypeScript", "Node.js", "Tailwind"],
     education: "B.Tech, Computer Science",
     location: "Mumbai",
     atsScore: 5,
     verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    resumeUrl: "#",
+    socials: {
+      github: "#",
+      linkedin: "#",
+    }
   },
   {
     id: "cand2",
     name: "Amit Verma",
-    skills: ["Python", "SQL", "Data Visualization"],
+    skills: ["Python", "SQL", "Data Visualization", "Tableau"],
     education: "MSc, Data Science",
     location: "Delhi",
     atsScore: 4,
     verified: false,
+    photoUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400",
+    resumeUrl: "#",
+    socials: {
+      linkedin: "#",
+      x: "#"
+    }
   },
   {
     id: "cand3",
@@ -95,29 +125,45 @@ export const mockFeedCandidates = [
   {
     id: "cand4",
     name: "Rohan Das",
-    skills: ["Go", "Kubernetes", "gRPC", "Kafka", "Prometheus", "SQL", "Python"],
+    skills: ["Go", "Kubernetes", "gRPC", "Kafka", "Prometheus", "SQL", "Python", "CI/CD"],
     education: "M.Tech, Software Engineering",
     location: "Pune",
     atsScore: 4.5,
     verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400",
+    resumeUrl: "#",
+    socials: {
+      github: "#",
+      linkedin: "#",
+    }
   },
   {
     id: "cand5",
     name: "Isha Singh",
-    skills: ["Agile", "Scrum", "JIRA", "Roadmapping", "User Research", "SQL"],
+    skills: ["Agile", "Scrum", "JIRA", "Roadmapping", "User Research", "SQL", "A/B Testing"],
     education: "MBA, Product Management",
     location: "Gurgaon",
     atsScore: 4.8,
     verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    resumeUrl: "#",
+    socials: {
+      linkedin: "#",
+    }
   },
   {
     id: "cand6",
     name: "Vikram Reddy",
-    skills: ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Python"],
+    skills: ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Python", "Ansible"],
     education: "B.E, Information Technology",
     location: "Hyderabad",
     atsScore: 4.2,
     verified: false,
+    photoUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400",
+    resumeUrl: "#",
+    socials: {
+      github: "#",
+    }
   },
   {
     id: "cand7",
@@ -127,7 +173,44 @@ export const mockFeedCandidates = [
     location: "Ahmedabad",
     atsScore: 4.0,
     verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    resumeUrl: "#",
+    socials: {
+      linkedin: "#",
+      x: "#"
+    }
   },
+  {
+    id: "cand8",
+    name: "Karan Singh",
+    skills: ["Cybersecurity", "Penetration Testing", "SIEM", "Python", "Cryptography"],
+    education: "Certified Ethical Hacker (CEH)",
+    location: "Bengaluru",
+    atsScore: 4.6,
+    verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400",
+    resumeUrl: "#",
+    socials: {
+      github: "#",
+      linkedin: "#",
+    }
+  },
+  {
+    id: "cand9",
+    name: "Neha Desai",
+    skills: ["React", "Node.js", "TypeScript", "PostgreSQL", "Docker", "AWS", "GraphQL"],
+    education: "B.Sc. in IT",
+    location: "Remote",
+    atsScore: 4.9,
+    verified: true,
+    photoUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    resumeUrl: "#",
+    socials: {
+      github: "#",
+      linkedin: "#",
+      x: "#",
+    }
+  }
 ];
 
 export const mockNotifications = [

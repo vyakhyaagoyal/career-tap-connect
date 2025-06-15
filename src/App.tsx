@@ -13,6 +13,7 @@ import Chats from "./pages/Chats";
 import About from "./pages/About";
 import RoleSelection from "./pages/RoleSelection";
 import RecruiterSetup from "./pages/RecruiterSetup";
+import JobSeekerHome from "./pages/JobSeekerHome";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/role-selection" element={<RoleSelection />} />
           <Route path="/recruiter-setup" element={<RecruiterSetup />} />
+          <Route path="/jobseeker-home" element={<JobSeekerHome />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/inbox" element={<Inbox />} />

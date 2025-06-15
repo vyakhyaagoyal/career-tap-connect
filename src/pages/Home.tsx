@@ -1,9 +1,17 @@
+
 import NavBar from "@/components/NavBar";
 import SwipeStack from "@/components/SwipeStack";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tables } from "@/integrations/supabase/types";
 import { mockFeedJobs, mockFeedCandidates } from "@/utils/mockData";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Define Candidate type based on CardCandidate props
 type Candidate = {
@@ -14,6 +22,14 @@ type Candidate = {
   location: string;
   atsScore: number;
   verified?: boolean;
+  photoUrl?: string;
+  resumeUrl?: string;
+  socials?: {
+    github?: string;
+    linkedin?: string;
+    x?: string;
+    instagram?: string;
+  };
 };
 
 // Define a type for our new feed structure for recruiters
@@ -84,6 +100,9 @@ const Home = () => {
                   location: profile.location || "Remote",
                   atsScore: parseFloat((matchPercentage * 5).toFixed(1)),
                   verified: mockCandidateData?.verified || false,
+                  photoUrl: mockCandidateData?.photoUrl,
+                  resumeUrl: mockCandidateData?.resumeUrl,
+                  socials: mockCandidateData?.socials,
                 };
               }
               return null;
@@ -101,47 +120,52 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff]">
       <NavBar />
-      <main className="flex-1 flex overflow-x-auto">
+      <main className="flex-1 flex overflow-hidden items-center">
         {isLoading ? (
-          <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 space-x-8">
-            {[1, 2].map((i) => (
-              <div key={i} className="flex-shrink-0 w-full max-w-xl">
-                <Skeleton className="h-8 w-3/4 mb-4" />
-                <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 min-h-[500px]">
-                  <div className="flex gap-4 items-start">
-                    <Skeleton className="w-16 h-16 rounded-lg" />
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </div>
+          <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+            <div className="flex-shrink-0 w-full max-w-xl">
+              <Skeleton className="h-8 w-3/4 mb-4" />
+              <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 min-h-[500px]">
+                <div className="flex gap-4 items-start">
+                  <Skeleton className="w-20 h-20 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
                   </div>
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/4" />
-                    <div className="flex flex-wrap gap-2">
-                      <Skeleton className="h-8 w-20" />
-                      <Skeleton className="h-8 w-24" />
-                      <Skeleton className="h-8 w-16" />
-                    </div>
+                </div>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-1/4" />
+                  <div className="flex flex-wrap gap-2">
+                    <Skeleton className="h-8 w-20" />
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-8 w-16" />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         ) : recruiterFeed && recruiterFeed.length > 0 ? (
-          <div className="flex-1 flex p-4 sm:p-6 lg:p-8 space-x-8">
-            {recruiterFeed.map(({ job, candidates }) => (
-              <div
-                key={job.id}
-                className="flex-shrink-0 w-full max-w-xl flex flex-col"
-              >
-                <h2 className="text-3xl font-bold text-gray-800 mb-4 self-start px-2">
-                  {job.title}
-                </h2>
-                <SwipeStack feed={candidates} userType="recruiter" />
-              </div>
-            ))}
+          <div className="flex-1 flex justify-center items-center w-full p-4">
+            <Carousel className="w-full max-w-2xl" opts={{ loop: false }}>
+              <CarouselContent>
+                {recruiterFeed.map(({ job, candidates }) => (
+                  <CarouselItem key={job.id}>
+                    <div className="p-1">
+                      <div className="w-full max-w-xl flex flex-col mx-auto">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-4 self-start px-2">
+                          {job.title}
+                        </h2>
+                        <SwipeStack feed={candidates} userType="recruiter" />
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex" />
+              <CarouselNext className="hidden sm:flex" />
+            </Carousel>
           </div>
         ) : (
           <div className="flex-1 flex justify-center items-center">
@@ -162,3 +186,4 @@ const Home = () => {
 };
 
 export default Home;
+

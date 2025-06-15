@@ -10,9 +10,9 @@ const RoleSelection = () => {
     localStorage.setItem("userRole", role);
     
     if (role === "jobseeker") {
-      navigate("/profile");
+      navigate("/jobseeker-home");
     } else {
-      navigate("/recruiter-setup");
+      navigate("/home");
     }
   };
 

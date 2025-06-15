@@ -65,9 +65,9 @@ const CardCandidate = ({
       <div className="w-full">
         <h3 className="font-semibold text-base mb-2 text-gray-700">ATS Match Score</h3>
         <div className="flex items-center gap-2 w-full">
-          <ProgressBar value={atsScore * 20} />
+          <ProgressBar value={atsScore} />
           <span className="ml-1 text-sm text-gray-600 font-bold">
-            {atsScore}/5
+            {atsScore}% Match
           </span>
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import NavBar from "@/components/NavBar";
 import SwipeStack from "@/components/SwipeStack";
 import { useQuery } from "@tanstack/react-query";
@@ -98,7 +97,7 @@ const Home = () => {
                   skills: profile.skills || [],
                   education: profile.education || "No education listed",
                   location: profile.location || "Remote",
-                  atsScore: parseFloat((matchPercentage * 5).toFixed(1)),
+                  atsScore: Math.round(matchPercentage * 100),
                   verified: mockCandidateData?.verified || false,
                   photoUrl: mockCandidateData?.photoUrl,
                   resumeUrl: mockCandidateData?.resumeUrl,
@@ -186,4 +185,3 @@ const Home = () => {
 };
 
 export default Home;
-

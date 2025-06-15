@@ -11,7 +11,7 @@ const jobTypes = ["Full-time", "Part-time", "Contract", "Freelance"];
 const seekingTypes = ["Internship", "Job"];
 
 const ProfileForm = () => {
-  const [name, setName] = useState("Jane Doe");
+  const [name, setName] = useState("");
   const [seeking, setSeeking] = useState("");
   const [role, setRole] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
@@ -107,55 +107,72 @@ const ProfileForm = () => {
           onChange={setSeeking}
           options={seekingTypes}
         />
-        <label>Sector:</label>
-        <select
-          name="sector"
-          value={sector}
-          onChange={handleChange}
-        >
-          <option value="">Select sector</option>
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Other">Other (type below)</option>
-        </select>
-        {sector === "Other" && (
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="sector" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Sector</label>
           <input
             type="text"
-            name="sectorManual"
+            id="sector"
+            name="sector"
             placeholder="Enter sector"
-            value={sectorManual}
+            value={sector}
             onChange={handleChange}
+            style={{
+              border: "2px solid #222",
+              borderRadius: "6px",
+              padding: "10px",
+              fontSize: "1rem",
+              outline: "none",
+              marginBottom: "16px",
+              width: "100%",
+              boxSizing: "border-box",
+              background: "#fff",
+            }}
           />
-        )}
-
-        <label>Role:</label>
-        <select
-          name="role"
-          value={role}
-          onChange={handleChange}
-        >
-          <option value="">Select role</option>
-          <option value="Developer">Developer</option>
-          <option value="Manager">Manager</option>
-          <option value="Other">Other (type below)</option>
-        </select>
-        {role === "Other" && (
+        </div>
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="role" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Role</label>
           <input
             type="text"
-            name="roleManual"
+            id="role"
+            name="role"
             placeholder="Enter role"
-            value={roleManual}
+            value={role}
             onChange={handleChange}
+            style={{
+              border: "2px solid #222",
+              borderRadius: "6px",
+              padding: "10px",
+              fontSize: "1rem",
+              outline: "none",
+              marginBottom: "16px",
+              width: "100%",
+              boxSizing: "border-box",
+              background: "#fff",
+            }}
           />
-        )}
-
-        <MultiSelect
-          label="Skills"
-          value={skills}
-          onChange={setSkills}
-          options={skillsList}
-        />
-        
+        </div>
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="skills" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Skills</label>
+          <input
+            type="text"
+            id="skills"
+            name="skills"
+            placeholder="Type your skills (comma separated)"
+            value={skills.join(", ")}
+            onChange={(e) => setSkills(e.target.value.split(",").map(skill => skill.trim()))}
+            style={{
+              border: "1.5px solid #bbb",
+              borderRadius: "6px",
+              padding: "10px",
+              fontSize: "1rem",
+              outline: "none",
+              marginBottom: "16px",
+              width: "100%",
+              boxSizing: "border-box",
+              background: "#f7f7f7",
+            }}
+          />
+        </div>
         <Select
           label="Location Preference"
           value={locationPref}

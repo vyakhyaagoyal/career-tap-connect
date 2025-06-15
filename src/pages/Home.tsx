@@ -68,7 +68,7 @@ const Home = () => {
           }
 
           const matchedCandidates: Candidate[] = candidateProfiles
-            .map((profile) => {
+            .map((profile): Candidate | null => {
               const candidateSkills = new Set(profile.skills || []);
               if (candidateSkills.size === 0) return null;
 

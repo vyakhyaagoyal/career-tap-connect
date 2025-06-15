@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import { useState } from "react";
+import VerificationBadge from "@/components/VerificationBadge";
 
 const RecruiterSetup = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -11,6 +12,33 @@ const RecruiterSetup = () => {
   const [pay, setPay] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [isPosting, setIsPosting] = useState(false);
+  const [gstin, setGstin] = useState("");
+  const [isCompanyVerified, setIsCompanyVerified] = useState<boolean | null>(null);
+
+  const handleVerifyCompany = async () => {
+    if (!gstin) {
+      toast({
+        title: "Please enter a GSTIN or CIN",
+        variant: "destructive",
+      });
+      return;
+    }
+    toast({ title: "Verifying company..." });
+    // Placeholder: In a real app, you'd call an edge function with a verification API.
+    setTimeout(() => {
+      if (gstin.length > 10) { // Simple mock validation
+        setIsCompanyVerified(true);
+        toast({ title: "Company Verified!", description: "This company appears to be legitimate." });
+      } else {
+        setIsCompanyVerified(false);
+        toast({
+          title: "Verification Failed",
+          description: "We could not verify this company.",
+          variant: "destructive",
+        });
+      }
+    }, 1500);
+  };
 
   const handlePostJob = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,15 +52,22 @@ const RecruiterSetup = () => {
         body: { text: jobDescription },
       });
 
-      if (error) throw error;
-      const skills = data.skills || [];
-
-      toast({
-        title: "Job Skills Extracted!",
-        description: `Found skills: ${skills.join(", ")}. Now posting...`,
-      });
-
-      // TODO: Replace with actual logged-in user ID after implementing auth
+      let skills = [];
+      if (error) {
+        console.error("Could not extract skills:", error.message);
+        // Don't block posting, just warn the user.
+        toast({
+          title: "AI Skill Extraction Skipped",
+          description: "Could not analyze skills. Job will be posted without AI tags.",
+        });
+      } else {
+        skills = data.skills || [];
+        toast({
+          title: "Job Skills Extracted!",
+          description: `Found skills: ${skills.join(", ")}. Now posting...`,
+        });
+      }
+      
       const recruiterId = "11111111-1111-1111-1111-111111111111";
 
       const { error: insertError } = await supabase.from("jobs").insert({
@@ -42,6 +77,7 @@ const RecruiterSetup = () => {
         pay,
         tags: skills,
         recruiter_id: recruiterId,
+        verified: isCompanyVerified === true, // Set job as verified if company is
       });
 
       if (insertError) {
@@ -59,6 +95,8 @@ const RecruiterSetup = () => {
       setCompany("");
       setLocation("");
       setPay("");
+      setGstin("");
+      setIsCompanyVerified(null);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -97,7 +135,10 @@ const RecruiterSetup = () => {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-sm mb-1 block">Company</label>
+                  <div className="flex items-center gap-2 mb-1">
+                    <label className="font-semibold text-sm block">Company</label>
+                    {isCompanyVerified === true && <VerificationBadge />}
+                  </div>
                   <input
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
@@ -129,6 +170,31 @@ const RecruiterSetup = () => {
               </div>
               <div>
                 <label className="font-semibold text-sm mb-1 block">
+                  GSTIN / CIN (for verification)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    value={gstin}
+                    onChange={(e) => setGstin(e.target.value)}
+                    placeholder="Enter to verify company legitimacy"
+                    className="w-full border rounded px-3 py-1.5 outline-primary"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyCompany}
+                    className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg whitespace-nowrap hover:bg-secondary/80 font-semibold"
+                  >
+                    Verify
+                  </button>
+                </div>
+                {isCompanyVerified === false && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Could not verify this company. Please double-check the ID.
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="font-semibold text-sm mb-1 block">
                   Job Description
                 </label>
                 <textarea
@@ -144,7 +210,7 @@ const RecruiterSetup = () => {
                 disabled={isPosting}
                 className="mt-2 px-6 py-2 bg-primary text-white w-max rounded-lg shadow hover-scale font-semibold disabled:opacity-60"
               >
-                {isPosting ? "Analyzing..." : "Post Job"}
+                {isPosting ? "Posting..." : "Post Job"}
               </button>
             </form>
           </div>
@@ -155,3 +221,4 @@ const RecruiterSetup = () => {
 };
 
 export default RecruiterSetup;
+

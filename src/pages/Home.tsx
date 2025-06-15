@@ -1,10 +1,9 @@
-
 import NavBar from "@/components/NavBar";
 import SwipeStack from "@/components/SwipeStack";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tables } from "@/integrations/supabase/types";
+import { mockFeedJobs, mockFeedCandidates } from "@/utils/mockData";
 
 // Define Candidate type based on CardCandidate props
 type Candidate = {
@@ -29,37 +28,30 @@ const Home = () => {
   const currentUserId = "11111111-1111-1111-1111-111111111111"; // Recruiter ID
 
   const { data: recruiterFeed, isLoading } = useQuery({
-    queryKey: ["recruiterFeed", currentUserId],
+    queryKey: ["recruiterFeed", currentUserId, "mock"],
     queryFn: async (): Promise<RecruiterFeedItem[]> => {
-      // 1. Fetch jobs for the current recruiter
-      const { data: jobs, error: jobsError } = await supabase
-        .from("jobs")
-        .select("*")
-        .eq("recruiter_id", currentUserId);
+      // Simulate network delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (jobsError) {
-        console.error("Error fetching recruiter jobs:", jobsError);
-        throw jobsError;
-      }
-      if (!jobs || jobs.length === 0) {
-        return [];
-      }
+      const jobs = mockFeedJobs.map(job => ({
+          ...job,
+          id: job.id, 
+          recruiter_id: currentUserId,
+          created_at: new Date().toISOString(),
+          tags: job.tags || [],
+      })) as Tables<'jobs'>[];
+      
+      const candidateProfiles = mockFeedCandidates.map(candidate => ({
+          id: candidate.id,
+          full_name: candidate.name,
+          skills: candidate.skills,
+          education: candidate.education,
+          location: candidate.location,
+          user_role: 'jobseeker',
+          email: `${candidate.name.replace(/\s+/g, '.').toLowerCase()}@example.com`
+      })) as Tables<'profiles'>[];
 
-      // 2. Fetch all potential candidates (jobseekers)
-      const { data: candidateProfiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id, full_name, skills, education, location")
-        .eq("user_role", "jobseeker");
-
-      if (profilesError) {
-        console.error("Error fetching candidate profiles:", profilesError);
-        throw profilesError;
-      }
-      if (!candidateProfiles || candidateProfiles.length === 0) {
-        return [];
-      }
-
-      // 3. For each job, find matching candidates
+      // For each job, find matching candidates
       const feedWithCandidates = jobs
         .map((job) => {
           const jobSkills = new Set(job.tags || []);
@@ -81,8 +73,9 @@ const Home = () => {
                   ? sharedSkills.length / jobSkills.size
                   : 0;
 
-              // Match if at least 50% of job skills are present
-              if (matchPercentage >= 0.5) {
+              // Match if at least 70% of job skills are present
+              if (matchPercentage >= 0.7) {
+                const mockCandidateData = mockFeedCandidates.find(c => c.id === profile.id);
                 return {
                   id: profile.id,
                   name: profile.full_name || "Anonymous Candidate",
@@ -90,7 +83,7 @@ const Home = () => {
                   education: profile.education || "No education listed",
                   location: profile.location || "Remote",
                   atsScore: parseFloat((matchPercentage * 5).toFixed(1)),
-                  verified: false,
+                  verified: mockCandidateData?.verified || false,
                 };
               }
               return null;
@@ -103,7 +96,6 @@ const Home = () => {
 
       return feedWithCandidates;
     },
-    enabled: !!currentUserId && userType === "recruiter",
   });
 
   return (

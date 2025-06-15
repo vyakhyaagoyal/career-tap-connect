@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
@@ -10,7 +11,7 @@ const Index = () => {
   }, []);
   
   const handleGetStarted = () => {
-    navigate("/home");
+    navigate("/role-selection");
   };
 
   const handleMyProfile = () => {

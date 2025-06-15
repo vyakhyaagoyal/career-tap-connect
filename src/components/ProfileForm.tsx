@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import VerificationBadge from "./VerificationBadge";
@@ -20,19 +21,37 @@ const ProfileForm = () => {
   const [jobType, setJobType] = useState("");
   const [resumeFile, setResumeFile] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
-  const [sectorManual, setSectorManual] = useState("");
-  const [roleManual, setRoleManual] = useState("");
+  const [socialLinks, setSocialLinks] = useState({
+    github: "",
+    linkedin: "",
+    twitter: "",
+    instagram: "",
+    youtube: ""
+  });
+
   const complete = [name, seeking, role, skills.length, sector, locationPref, jobType, resumeFile].every(Boolean);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const profileData = {
+      name,
+      seeking,
+      role,
+      skills,
+      sector,
+      locationPref,
+      jobType,
+      resumeFile,
+      socialLinks,
+      verified
+    };
+    localStorage.setItem("jobSeekerProfile", JSON.stringify(profileData));
     toast({
       title: "Profile updated!",
       description: `Profile is now ${complete ? "complete" : "incomplete"}.`,
     });
   };
 
-  // TODO: Integrate DigiLocker/company verification
   const handleVerify = () => {
     setTimeout(() => {
       setVerified(true);
@@ -43,42 +62,8 @@ const ProfileForm = () => {
     }, 900);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case "name":
-        setName(value);
-        break;
-      case "seeking":
-        setSeeking(value);
-        break;
-      case "role":
-        setRole(value);
-        break;
-      case "skills":
-        setSkills(value.split(","));
-        break;
-      case "sector":
-        setSector(value);
-        break;
-      case "locationPref":
-        setLocationPref(value);
-        break;
-      case "jobType":
-        setJobType(value);
-        break;
-      case "resumeFile":
-        setResumeFile(value);
-        break;
-      case "sectorManual":
-        setSectorManual(value);
-        break;
-      case "roleManual":
-        setRoleManual(value);
-        break;
-      default:
-        break;
-    }
+  const handleSocialLinkChange = (platform: string, value: string) => {
+    setSocialLinks(prev => ({ ...prev, [platform]: value }));
   };
 
   return (
@@ -99,6 +84,7 @@ const ProfileForm = () => {
           </button>
         )}
       </div>
+
       <div className="grid md:grid-cols-2 gap-4">
         <Input label="Display Name" value={name} onChange={setName} />
         <Select
@@ -107,70 +93,16 @@ const ProfileForm = () => {
           onChange={setSeeking}
           options={seekingTypes}
         />
-        <div style={{ marginBottom: 20 }}>
-          <label htmlFor="sector" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Sector</label>
+        <Input label="Sector" value={sector} onChange={setSector} />
+        <Input label="Role" value={role} onChange={setRole} />
+        <div className="md:col-span-2">
+          <label className="block font-semibold text-sm mb-2">Skills</label>
           <input
             type="text"
-            id="sector"
-            name="sector"
-            placeholder="Enter sector"
-            value={sector}
-            onChange={handleChange}
-            style={{
-              border: "2px solid #222",
-              borderRadius: "6px",
-              padding: "10px",
-              fontSize: "1rem",
-              outline: "none",
-              marginBottom: "16px",
-              width: "100%",
-              boxSizing: "border-box",
-              background: "#fff",
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: 20 }}>
-          <label htmlFor="role" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Role</label>
-          <input
-            type="text"
-            id="role"
-            name="role"
-            placeholder="Enter role"
-            value={role}
-            onChange={handleChange}
-            style={{
-              border: "2px solid #222",
-              borderRadius: "6px",
-              padding: "10px",
-              fontSize: "1rem",
-              outline: "none",
-              marginBottom: "16px",
-              width: "100%",
-              boxSizing: "border-box",
-              background: "#fff",
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: 20 }}>
-          <label htmlFor="skills" style={{ fontWeight: 500, marginBottom: 6, display: "block" }}>Skills</label>
-          <input
-            type="text"
-            id="skills"
-            name="skills"
             placeholder="Type your skills (comma separated)"
             value={skills.join(", ")}
             onChange={(e) => setSkills(e.target.value.split(",").map(skill => skill.trim()))}
-            style={{
-              border: "1.5px solid #bbb",
-              borderRadius: "6px",
-              padding: "10px",
-              fontSize: "1rem",
-              outline: "none",
-              marginBottom: "16px",
-              width: "100%",
-              boxSizing: "border-box",
-              background: "#f7f7f7",
-            }}
+            className="w-full border rounded px-3 py-1.5 outline-primary"
           />
         </div>
         <Select
@@ -186,10 +118,69 @@ const ProfileForm = () => {
           options={jobTypes}
         />
       </div>
+
+      {/* Social Media Links Section */}
+      <div className="border-t pt-5">
+        <h3 className="font-semibold text-lg mb-4">Social Media Links</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-semibold text-sm mb-1">GitHub</label>
+            <input
+              type="url"
+              placeholder="https://github.com/username"
+              value={socialLinks.github}
+              onChange={(e) => handleSocialLinkChange("github", e.target.value)}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
+          <div>
+            <label className="block font-semibold text-sm mb-1">LinkedIn</label>
+            <input
+              type="url"
+              placeholder="https://linkedin.com/in/username"
+              value={socialLinks.linkedin}
+              onChange={(e) => handleSocialLinkChange("linkedin", e.target.value)}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
+          <div>
+            <label className="block font-semibold text-sm mb-1">X (Twitter)</label>
+            <input
+              type="url"
+              placeholder="https://x.com/username"
+              value={socialLinks.twitter}
+              onChange={(e) => handleSocialLinkChange("twitter", e.target.value)}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
+          <div>
+            <label className="block font-semibold text-sm mb-1">Instagram</label>
+            <input
+              type="url"
+              placeholder="https://instagram.com/username"
+              value={socialLinks.instagram}
+              onChange={(e) => handleSocialLinkChange("instagram", e.target.value)}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block font-semibold text-sm mb-1">YouTube</label>
+            <input
+              type="url"
+              placeholder="https://youtube.com/@username"
+              value={socialLinks.youtube}
+              onChange={(e) => handleSocialLinkChange("youtube", e.target.value)}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
+        </div>
+      </div>
+
       <div>
         <h3 className="font-semibold text-sm mb-2">Resume (Required)</h3>
         <ResumeUpload fileName={resumeFile} onUploadSuccess={setResumeFile} />
       </div>
+
       <button
         type="submit"
         className={`mt-3 px-6 py-2 bg-primary text-white w-max rounded-lg shadow hover-scale font-semibold ${complete ? "opacity-100" : "opacity-60 pointer-events-none"}`}
@@ -245,45 +236,6 @@ function Select({
         ))}
       </select>
     </label>
-  );
-}
-
-function MultiSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string[];
-  onChange: (v: string[]) => void;
-  options: string[];
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="font-semibold text-sm">{label}</span>
-      <div className="flex flex-wrap gap-2">
-        {options.map((skill) => (
-          <button
-            key={skill}
-            type="button"
-            className={`rounded-full px-3 py-1 border ${value.includes(skill)
-                ? "bg-primary text-white border-primary"
-                : "bg-muted text-foreground"
-              } text-xs font-medium hover-scale transition`}
-            onClick={() =>
-              onChange(
-                value.includes(skill)
-                  ? value.filter((v) => v !== skill)
-                  : [...value, skill]
-              )
-            }
-          >
-            {skill}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 

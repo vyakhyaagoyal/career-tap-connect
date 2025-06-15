@@ -1,6 +1,7 @@
+
 import VerificationBadge from "./VerificationBadge";
 import TagChip from "./TagChip";
-import { MapPin, Briefcase, CircleDollarSign } from "lucide-react";
+import { MapPin, Briefcase, CircleDollarSign, Github, Linkedin, X, Instagram } from "lucide-react";
 
 type Props = {
   title: string;
@@ -9,6 +10,13 @@ type Props = {
   location: string;
   tags: string[];
   verified?: boolean;
+  description: string;
+  socials?: {
+    github?: string;
+    linkedin?: string;
+    x?: string;
+    instagram?: string;
+  };
 };
 
 const CardJob = ({
@@ -18,9 +26,9 @@ const CardJob = ({
   location,
   tags,
   verified,
+  description,
+  socials,
 }: Props) => {
-  const description = "Join our dynamic team to build amazing user interfaces and shape the future of web development. We value creativity and collaboration.";
-
   return (
     <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 animate-scale-in backdrop-blur-md min-h-[500px]">
       <div className="flex gap-4 items-start">
@@ -61,6 +69,31 @@ const CardJob = ({
           ))}
         </div>
       </div>
+
+      {socials && (
+        <div className="flex gap-4 pt-2 mt-auto">
+          {socials.github && (
+            <a href={socials.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-800 transition-colors">
+              <Github className="w-6 h-6" />
+            </a>
+          )}
+          {socials.linkedin && (
+            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-800 transition-colors">
+              <Linkedin className="w-6 h-6" />
+            </a>
+          )}
+          {socials.x && (
+            <a href={socials.x} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-800 transition-colors">
+              <X className="w-6 h-6" />
+            </a>
+          )}
+          {socials.instagram && (
+            <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-800 transition-colors">
+              <Instagram className="w-6 h-6" />
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 };

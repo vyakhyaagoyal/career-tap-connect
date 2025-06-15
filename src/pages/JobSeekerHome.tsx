@@ -13,6 +13,13 @@ type Job = {
   location: string;
   tags: string[];
   verified?: boolean;
+  description: string;
+  socials?: {
+    github?: string;
+    linkedin?: string;
+    x?: string;
+    instagram?: string;
+  };
 };
 
 const JobSeekerHome = () => {
@@ -25,6 +32,12 @@ const JobSeekerHome = () => {
       return mockFeedJobs.map((job) => ({
         ...job,
         tags: job.tags || [],
+        description: `Join our dynamic team at ${job.company} to build amazing user interfaces and shape the future of web development. We value creativity and collaboration. This is an exciting role for a ${job.title}.`,
+        socials: {
+            github: `https://github.com/${job.company.toLowerCase().replace(/\s/g, '')}`,
+            linkedin: `https://linkedin.com/company/${job.company.toLowerCase().replace(/\s/g, '')}`,
+            x: `https://x.com/${job.company.toLowerCase().replace(/\s/g, '')}`,
+        }
       }));
     },
   });

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import CardJob from "./CardJob";
 import CardCandidate from "./CardCandidate";
@@ -11,6 +12,13 @@ type Job = {
   location: string;
   tags: string[];
   verified?: boolean;
+  description: string;
+  socials?: {
+    github?: string;
+    linkedin?: string;
+    x?: string;
+    instagram?: string;
+  };
 };
 type Candidate = {
   id: string;

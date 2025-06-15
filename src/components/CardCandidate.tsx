@@ -1,4 +1,3 @@
-
 import VerificationBadge from "./VerificationBadge";
 import TagChip from "./TagChip";
 import ProgressBar from "./ProgressBar";
@@ -101,7 +100,7 @@ const CardCandidate = ({
       {resumeUrl && (
         <Button asChild variant="outline" className="w-full mt-auto">
           <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
-            <FileText className="mr-2" /> View Resume
+            <FileText className="mr-2" /> <span className="font-bold">View Resume</span>
           </a>
         </Button>
       )}
@@ -110,4 +109,3 @@ const CardCandidate = ({
 };
 
 export default CardCandidate;
-

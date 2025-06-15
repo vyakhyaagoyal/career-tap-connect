@@ -10,6 +10,7 @@ type Job = {
   title: string;
   pay: string;
   company: string;
+  companyPhotoUrl?: string;
   location: string;
   tags: string[];
   verified?: boolean;
@@ -28,9 +29,20 @@ const JobSeekerHome = () => {
     queryFn: async (): Promise<Job[]> => {
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const placeholderPhotos = [
+        'photo-1488590528505-98d2b5aba04b',
+        'photo-1486312338219-ce68d2c6f44d',
+        'photo-1460925895917-afdab827c52f',
+        'photo-1483058712412-4245e9b90334',
+        'photo-1498050108023-c5249f4df085',
+        'photo-1496307653780-42ee777d4833',
+      ];
+
       // In a real app, you'd fetch jobs relevant to the user's profile
-      return mockFeedJobs.map((job) => ({
+      return mockFeedJobs.map((job, index) => ({
         ...job,
+        companyPhotoUrl: `https://images.unsplash.com/${placeholderPhotos[index % placeholderPhotos.length]}?q=80&w=400&auto=format&fit=crop`,
         tags: job.tags || [],
         description: `Join our dynamic team at ${job.company} to build amazing user interfaces and shape the future of web development. We value creativity and collaboration. This is an exciting role for a ${job.title}.`,
         socials: {

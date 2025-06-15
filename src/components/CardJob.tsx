@@ -2,11 +2,13 @@
 import VerificationBadge from "./VerificationBadge";
 import TagChip from "./TagChip";
 import { MapPin, Briefcase, CircleDollarSign, Github, Linkedin, X, Instagram } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Props = {
   title: string;
   pay: string;
   company: string;
+  companyPhotoUrl?: string;
   location: string;
   tags: string[];
   verified?: boolean;
@@ -23,6 +25,7 @@ const CardJob = ({
   title,
   pay,
   company,
+  companyPhotoUrl,
   location,
   tags,
   verified,
@@ -31,17 +34,20 @@ const CardJob = ({
 }: Props) => {
   return (
     <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 animate-scale-in backdrop-blur-md min-h-[500px]">
-      <div className="flex gap-4 items-start">
-        <div className="w-16 h-16 bg-muted rounded-lg flex-shrink-0"></div>
+      <div className="flex items-start justify-between w-full">
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold">{title}</span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-3xl font-bold">{title}</span>
             {verified && <VerificationBadge />}
           </div>
           <div className="text-base font-medium text-gray-600">
             {company}
           </div>
         </div>
+        <Avatar className="w-20 h-20 border-2 border-white shadow-md">
+          <AvatarImage src={companyPhotoUrl} alt={company} />
+          <AvatarFallback>{company.charAt(0)}</AvatarFallback>
+        </Avatar>
       </div>
 
       <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-700">

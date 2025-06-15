@@ -9,6 +9,7 @@ type Job = {
   title: string;
   pay: string;
   company: string;
+  companyPhotoUrl?: string;
   location: string;
   tags: string[];
   verified?: boolean;
@@ -74,10 +75,10 @@ const SwipeStack = ({ feed, userType }: Props) => {
       <div className="relative w-full h-[520px] drop-shadow-lg">
         <div
           className={`
-            absolute w-full transition-all duration-500 ease-in-out
-            ${swipeDir === "left" ? "-translate-x-[150vw] -rotate-12 opacity-0 scale-95" : ""}
-            ${swipeDir === "right" ? "translate-x-[150vw] rotate-12 opacity-0 scale-95" : ""}
-            ${swipeDir === "up" ? "-translate-y-[100vh] opacity-0 scale-90" : ""}
+            absolute w-full transition-transform transition-opacity duration-500 ease-in-out
+            ${swipeDir === "left" ? "-translate-x-full -rotate-6 opacity-0" : ""}
+            ${swipeDir === "right" ? "translate-x-full rotate-6 opacity-0" : ""}
+            ${swipeDir === "up" ? "-translate-y-full opacity-0" : ""}
           `}
           style={{ zIndex: 2 }}
         >

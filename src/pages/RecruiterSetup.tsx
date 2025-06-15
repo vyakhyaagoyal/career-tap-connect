@@ -1,189 +1,102 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const RecruiterSetup = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    companyName: "",
-    recruiterName: "",
-    email: "",
-    position: "",
-    companySize: "",
-    industry: "",
-    location: "",
-    website: "",
-    description: ""
-  });
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
 
-  const companySizes = ["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"];
-  const industries = ["Technology", "Healthcare", "Finance", "Education", "E-commerce", "Manufacturing", "Consulting", "Other"];
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handlePostJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Store recruiter data (integrate with your backend later)
-    localStorage.setItem("recruiterData", JSON.stringify(formData));
-    toast({
-      title: "Profile Created!",
-      description: "Your recruiter profile has been set up successfully.",
-    });
-    navigate("/home");
-  };
+    if (!jobTitle || !jobDescription) {
+      toast({ title: "Please fill all job fields.", variant: "destructive" });
+      return;
+    }
+    setIsPosting(true);
+    try {
+      // TODO: Configure Supabase client to call this function
+      /*
+      const { data, error } = await supabase.functions.invoke("extract-skills", {
+        body: { text: jobDescription },
+      });
+      if (error) throw error;
+      const skills = data.skills || [];
+      */
 
-  const isFormValid = Object.values(formData).every(value => value.trim() !== "");
+      // Using mock data until Supabase client is configured
+      console.log("Extracted job description text. Ready to send to AI.", {
+        length: jobDescription.length,
+      });
+      const skills = ["MERN Stack (Demo)", "REST APIs (Demo)", "AI Extracted (Demo)"];
+      // End mock data
+
+      toast({
+        title: "Job Skills Extracted!",
+        description: `Found skills: ${skills.join(", ")}. Ready to save.`,
+      });
+
+      // TODO: Save the job post and skills to the 'jobs' table in Supabase
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Could not extract skills from job description.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPosting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-[#fafdff] via-[#f5efff] to-[#e7f0ff] flex flex-col">
       <NavBar />
-      <div className="flex-1 px-4 max-w-4xl mx-auto py-8">
-        <h1 className="text-3xl font-extrabold mb-2 text-center">Set Up Your Recruiter Profile</h1>
-        <p className="text-muted-foreground mb-8 text-center">Tell us about your company and what you're looking for</p>
-        
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 animate-fade-in">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold mb-2">Company Name *</label>
-              <input
-                type="text"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="Enter company name"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Your Name *</label>
-              <input
-                type="text"
-                name="recruiterName"
-                value={formData.recruiterName}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Email *</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="Enter email address"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Your Position *</label>
-              <input
-                type="text"
-                name="position"
-                value={formData.position}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="e.g., HR Manager, Talent Acquisition"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Company Size *</label>
-              <select
-                name="companySize"
-                value={formData.companySize}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                required
-              >
-                <option value="">Select company size</option>
-                {companySizes.map(size => (
-                  <option key={size} value={size}>{size} employees</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Industry *</label>
-              <select
-                name="industry"
-                value={formData.industry}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                required
-              >
-                <option value="">Select industry</option>
-                {industries.map(industry => (
-                  <option key={industry} value={industry}>{industry}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Location *</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="City, Country"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Company Website *</label>
-              <input
-                type="url"
-                name="website"
-                value={formData.website}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-3 py-2 outline-primary"
-                placeholder="https://company.com"
-                required
-              />
-            </div>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-2xl mx-auto">
+          <div className="bg-white border rounded-xl shadow-lg p-7 flex flex-col gap-5 animate-fade-in">
+            <h1 className="text-2xl font-bold mb-2">Recruiter Setup</h1>
+            <p className="text-muted-foreground">
+              Set up your company profile and post your first job.
+            </p>
+            {/* Recruiter profile form can be added here */}
           </div>
-          
-          <div className="mt-6">
-            <label className="block text-sm font-semibold mb-2">Company Description *</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full border rounded-lg px-3 py-2 outline-primary resize-none"
-              placeholder="Tell us about your company, culture, and what makes it special..."
-              required
-            />
+
+          <div className="bg-white border rounded-xl shadow-lg p-7 flex flex-col gap-5 animate-fade-in mt-8">
+            <h2 className="text-2xl font-bold mb-2">Post a Job</h2>
+            <form onSubmit={handlePostJob} className="flex flex-col gap-4">
+              <div>
+                <label className="font-semibold text-sm mb-1 block">Job Title</label>
+                <input
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  placeholder="e.g., Senior Frontend Developer"
+                  className="w-full border rounded px-3 py-1.5 outline-primary"
+                  required
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm mb-1 block">
+                  Job Description
+                </label>
+                <textarea
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                  placeholder="Paste the full job description here. Our AI will analyze it for required skills."
+                  className="w-full border rounded px-3 py-1.5 outline-primary min-h-[150px]"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isPosting}
+                className="mt-2 px-6 py-2 bg-primary text-white w-max rounded-lg shadow hover-scale font-semibold disabled:opacity-60"
+              >
+                {isPosting ? "Analyzing..." : "Post Job"}
+              </button>
+            </form>
           </div>
-          
-          <button
-            type="submit"
-            disabled={!isFormValid}
-            className={`mt-8 w-full px-6 py-3 rounded-lg font-semibold transition-all ${
-              isFormValid 
-                ? "bg-primary text-white hover:bg-primary/90 hover:scale-105" 
-                : "bg-gray-200 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            Complete Setup
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );

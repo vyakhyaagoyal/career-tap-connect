@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import VerificationBadge from "./VerificationBadge";
@@ -45,13 +44,19 @@ const ProfileForm = () => {
       socialLinks,
       verified
     };
+    // TODO: Save to Supabase 'profiles' table instead of localStorage
     localStorage.setItem("jobSeekerProfile", JSON.stringify(profileData));
     toast({
       title: "Profile updated!",
-      description: `Profile is now ${complete ? "complete" : "incomplete"}.`,
+      description: `Your profile is saved locally for now.`,
     });
   };
 
+  const handleResumeUploadSuccess = (fileName: string, extractedSkills: string[]) => {
+    setResumeFile(fileName);
+    setSkills(prevSkills => [...new Set([...prevSkills, ...extractedSkills])]);
+  };
+  
   const handleVerify = () => {
     setTimeout(() => {
       setVerified(true);
@@ -97,13 +102,16 @@ const ProfileForm = () => {
         <Input label="Role" value={role} onChange={setRole} />
         <div className="md:col-span-2">
           <label className="block font-semibold text-sm mb-2">Skills</label>
-          <input
-            type="text"
-            placeholder="Type your skills (comma separated)"
-            value={skills.join(", ")}
-            onChange={(e) => setSkills(e.target.value.split(",").map(skill => skill.trim()))}
-            className="w-full border rounded px-3 py-1.5 outline-primary"
-          />
+          <div className="p-3 border rounded-lg bg-gray-50/50">
+            <p className="text-xs text-muted-foreground mb-2">Manually add skills (comma-separated) or upload your resume to let AI extract them for you.</p>
+            <input
+              type="text"
+              placeholder="e.g. React, Node.js, Python"
+              value={skills.join(", ")}
+              onChange={(e) => setSkills(e.target.value.split(",").map(skill => skill.trim()).filter(Boolean))}
+              className="w-full border rounded px-3 py-1.5 outline-primary"
+            />
+          </div>
         </div>
         <Select
           label="Location Preference"
@@ -177,8 +185,8 @@ const ProfileForm = () => {
       </div>
 
       <div>
-        <h3 className="font-semibold text-sm mb-2">Resume (Required)</h3>
-        <ResumeUpload fileName={resumeFile} onUploadSuccess={setResumeFile} />
+        <h3 className="font-semibold text-sm mb-2">Resume (Required for AI Matching)</h3>
+        <ResumeUpload fileName={resumeFile} onUploadSuccess={handleResumeUploadSuccess} />
       </div>
 
       <button

@@ -21,7 +21,7 @@ const CardCandidate = ({
   verified,
 }: Props) => {
   return (
-    <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-2 items-start animate-scale-in backdrop-blur-md">
+    <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-2 items-start animate-scale-in backdrop-blur-md min-h-[500px]">
       <div className="flex items-center gap-2 mb-1">
         <span className="text-2xl font-bold">{name}</span>
         {verified && <VerificationBadge />}

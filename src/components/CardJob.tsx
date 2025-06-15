@@ -1,4 +1,3 @@
-
 import VerificationBadge from "./VerificationBadge";
 import TagChip from "./TagChip";
 import { MapPin, Briefcase, CircleDollarSign } from "lucide-react";
@@ -23,7 +22,7 @@ const CardJob = ({
   const description = "Join our dynamic team to build amazing user interfaces and shape the future of web development. We value creativity and collaboration.";
 
   return (
-    <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 animate-scale-in backdrop-blur-md">
+    <div className="w-full bg-white rounded-2xl border shadow-xl p-7 flex flex-col gap-4 animate-scale-in backdrop-blur-md min-h-[500px]">
       <div className="flex gap-4 items-start">
         <div className="w-16 h-16 bg-muted rounded-lg flex-shrink-0"></div>
         <div className="flex-1">

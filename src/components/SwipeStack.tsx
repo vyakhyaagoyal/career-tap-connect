@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import CardJob from "./CardJob";
 import CardCandidate from "./CardCandidate";
@@ -41,7 +40,7 @@ const SwipeStack = ({ feed, userType }: Props) => {
     setTimeout(() => {
       setSwipeDir(null);
       setCurrent((c) => Math.min(feed.length, c + 1));
-    }, 300);
+    }, 500);
   };
 
   if (current >= feed.length)
@@ -55,10 +54,10 @@ const SwipeStack = ({ feed, userType }: Props) => {
   const card = feed[current];
 
   return (
-    <div className="relative w-full min-h-[550px] flex flex-col items-center drop-shadow-lg select-none animate-fade-in">
+    <div className="relative w-full min-h-[620px] flex flex-col items-center drop-shadow-lg select-none animate-fade-in">
       <div
         className={`
-          absolute w-full transition-all duration-300 ease-out
+          absolute w-full transition-all duration-500 ease-in-out
           ${swipeDir === "left" ? "-translate-x-[150vw] -rotate-12 opacity-0 scale-95" : ""}
           ${swipeDir === "right" ? "translate-x-[150vw] rotate-12 opacity-0 scale-95" : ""}
           ${swipeDir === "up" ? "-translate-y-[100vh] opacity-0 scale-90" : ""}

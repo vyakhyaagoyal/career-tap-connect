@@ -1,47 +1,68 @@
 
 import NavBar from "@/components/NavBar";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabaseClient";
 import { useState } from "react";
 
 const RecruiterSetup = () => {
   const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [pay, setPay] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [isPosting, setIsPosting] = useState(false);
 
   const handlePostJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!jobTitle || !jobDescription) {
+    if (!jobTitle || !jobDescription || !company || !location || !pay) {
       toast({ title: "Please fill all job fields.", variant: "destructive" });
       return;
     }
     setIsPosting(true);
     try {
-      // TODO: Configure Supabase client to call this function
-      /*
       const { data, error } = await supabase.functions.invoke("extract-skills", {
         body: { text: jobDescription },
       });
+
       if (error) throw error;
       const skills = data.skills || [];
-      */
-
-      // Using mock data until Supabase client is configured
-      console.log("Extracted job description text. Ready to send to AI.", {
-        length: jobDescription.length,
-      });
-      const skills = ["MERN Stack (Demo)", "REST APIs (Demo)", "AI Extracted (Demo)"];
-      // End mock data
 
       toast({
         title: "Job Skills Extracted!",
-        description: `Found skills: ${skills.join(", ")}. Ready to save.`,
+        description: `Found skills: ${skills.join(", ")}. Now posting...`,
       });
 
-      // TODO: Save the job post and skills to the 'jobs' table in Supabase
+      // TODO: Replace with actual logged-in user ID after implementing auth
+      const recruiterId = "11111111-1111-1111-1111-111111111111";
+
+      const { error: insertError } = await supabase.from("jobs").insert({
+        title: jobTitle,
+        company,
+        location,
+        pay,
+        tags: skills,
+        recruiter_id: recruiterId,
+      });
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
+
+      toast({
+        title: "Job Posted Successfully!",
+        description: `Your job "${jobTitle}" is now live.`,
+      });
+
+      // Reset form
+      setJobTitle("");
+      setJobDescription("");
+      setCompany("");
+      setLocation("");
+      setPay("");
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Could not extract skills from job description.",
+        description: error.message || "Could not post job.",
         variant: "destructive",
       });
     } finally {
@@ -59,21 +80,52 @@ const RecruiterSetup = () => {
             <p className="text-muted-foreground">
               Set up your company profile and post your first job.
             </p>
-            {/* Recruiter profile form can be added here */}
           </div>
 
           <div className="bg-white border rounded-xl shadow-lg p-7 flex flex-col gap-5 animate-fade-in mt-8">
             <h2 className="text-2xl font-bold mb-2">Post a Job</h2>
             <form onSubmit={handlePostJob} className="flex flex-col gap-4">
-              <div>
-                <label className="font-semibold text-sm mb-1 block">Job Title</label>
-                <input
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                  placeholder="e.g., Senior Frontend Developer"
-                  className="w-full border rounded px-3 py-1.5 outline-primary"
-                  required
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="font-semibold text-sm mb-1 block">Job Title</label>
+                  <input
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    placeholder="e.g., Senior Frontend Developer"
+                    className="w-full border rounded px-3 py-1.5 outline-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-sm mb-1 block">Company</label>
+                  <input
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder="e.g., Acme Inc."
+                    className="w-full border rounded px-3 py-1.5 outline-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-sm mb-1 block">Location</label>
+                  <input
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g., San Francisco, CA"
+                    className="w-full border rounded px-3 py-1.5 outline-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-sm mb-1 block">Pay / Salary</label>
+                  <input
+                    value={pay}
+                    onChange={(e) => setPay(e.target.value)}
+                    placeholder="e.g., $120,000 - $150,000"
+                    className="w-full border rounded px-3 py-1.5 outline-primary"
+                    required
+                  />
+                </div>
               </div>
               <div>
                 <label className="font-semibold text-sm mb-1 block">

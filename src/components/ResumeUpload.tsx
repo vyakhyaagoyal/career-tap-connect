@@ -1,8 +1,8 @@
-
 import { useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import * as pdfjsLib from "pdfjs-dist";
 import mammoth from "mammoth";
+import { supabase } from "@/lib/supabaseClient";
 
 // This is required for pdf.js to work in a Vite environment
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
@@ -53,9 +53,6 @@ const ResumeUpload = ({ fileName, onUploadSuccess }: Props) => {
         description: "Now extracting skills with AI...",
       });
       
-      // TODO: You need to set up a Supabase client and uncomment this section.
-      // import { supabase } from "@/lib/supabaseClient"; // Create this file
-      /*
       const { data, error } = await supabase.functions.invoke("extract-skills", {
         body: { text },
       });
@@ -63,12 +60,6 @@ const ResumeUpload = ({ fileName, onUploadSuccess }: Props) => {
       if (error) throw error;
       
       const skills = data.skills || [];
-      */
-
-      // Using mock data until Supabase client is configured
-      console.log("Extracted resume text. Ready to send to AI.", { length: text.length });
-      const skills = ["React (Demo)", "Node.js (Demo)", "AI Extracted (Demo)"];
-      // End of mock data block
 
       onUploadSuccess(file.name, skills);
       toast({
